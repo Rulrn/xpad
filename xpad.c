@@ -70,6 +70,7 @@
 #include <linux/usb/input.h>
 #include <linux/usb/quirks.h>
 #include <linux/timer.h>
+#include <linux/container_of.h>
 
 #define XPAD_PKT_LEN 64
 
@@ -782,14 +783,25 @@ static void ghl_magic_poke_cb(struct urb *urb)
  *
  *	Submits the GHL magic_data URB.
  */
+// static void ghl_magic_poke(struct timer_list *t)
+// {
+// 	int ret;
+// 	struct usb_xpad *xpad = from_timer(xpad, t, ghl_poke_timer);
+
+// 	ret = usb_submit_urb(xpad->ghl_urb, GFP_ATOMIC);
+// 	if (ret < 0)
+// 		pr_warn("URB transfer failed.\n");
+// }
 static void ghl_magic_poke(struct timer_list *t)
 {
-	int ret;
-	struct usb_xpad *xpad = from_timer(xpad, t, ghl_poke_timer);
+    struct usb_xpad *xpad;
+    int ret;
 
-	ret = usb_submit_urb(xpad->ghl_urb, GFP_ATOMIC);
-	if (ret < 0)
-		pr_warn("URB transfer failed.\n");
+    xpad = container_of(t, struct usb_xpad, ghl_poke_timer);
+
+    ret = usb_submit_urb(xpad->ghl_urb, GFP_ATOMIC);
+    if (ret < 0)
+        pr_warn("URB transfer failed.\n");
 }
 
 /*
