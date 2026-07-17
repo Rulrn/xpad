@@ -69,6 +69,7 @@
 #include <linux/module.h>
 #include <linux/usb/input.h>
 #include <linux/usb/quirks.h>
+#include <linux/idr.h>
 #include <linux/timer.h>
 #include <linux/container_of.h>
 
